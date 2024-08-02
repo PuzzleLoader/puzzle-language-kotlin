@@ -9,6 +9,7 @@ import java.lang.invoke.MethodHandleProxies
 import java.lang.invoke.MethodHandles
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import kotlin.reflect.full.createInstance
 
 class KotlinLanguageAdapter : LanguageAdapter {
 
@@ -29,7 +30,7 @@ class KotlinLanguageAdapter : LanguageAdapter {
             return if (type.isAssignableFrom(type)) {
                 kClass.objectInstance as? T
                     ?: try {
-                        ClassUtil.newInstance(clazz) as T
+                        kClass.createInstance() as T
                     } catch (e: Exception) {
                         throw LanguageAdapterException(e)
                     }
