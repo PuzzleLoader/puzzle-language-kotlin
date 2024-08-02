@@ -1,8 +1,10 @@
 plugins {
     id "java"
     id "java-library"
+    id "maven-publish"
     id "cr_puzzle_gradle" version "1.1.0-dev"
     id "com.github.johnrengelman.shadow"  version "8.1.1"
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 puzzle_loader {
@@ -13,6 +15,7 @@ repositories {
     mavenCentral()
 }
 
+
 tasks.register("runLoader", JavaExec) {
     group = "loader"
 
@@ -20,17 +23,48 @@ tasks.register("runLoader", JavaExec) {
     mainClass = "dev.crmodders.puzzle.loader.launch.Piece"
 }
 
+def LIBRARY_VERSIONS_FILE = "generated/library_versions.json"
+def KOTLIN_VERSION_FILE = "generated/kotlin_version.txt"
+
+def kotlinLib = "org.jetbrains.kotlin:kotlin-stdlib"
+def libraries = [
+        kotlinLib,
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+        "org.jetbrains.kotlin:kotlin-reflect",
+
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm",
+        "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8",
+        "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm",
+        "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm",
+        "org.jetbrains.kotlinx:kotlinx-serialization-cbor-jvm",
+        "org.jetbrains.kotlinx:atomicfu-jvm",
+        "org.jetbrains.kotlinx:kotlinx-datetime-jvm"
+]
+
+import groovy.json.JsonSlurper
+def libVersions = new JsonSlurper().parse(file(LIBRARY_VERSIONS_FILE))
+def hasMissingLibVersion = !libVersions.keySet().containsAll(libraries)
+def kotlinVersion = file(KOTLIN_VERSION_FILE).text
+
 dependencies {
+    bundle "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    libraries.forEach {
+        bundle("${it}:${libVersions[it]}")
+    }
 }
+
+version = modVersion + "+kotlin." + kotlinVersion
 
 processResources {
     def resourceTargets = [ // Locations of where to inject the properties
                             "puzzle.mod.json"
     ]
 
-    // Left item is the name in the target, right is the varuable name
+    // Left item is the name in the target, right is the variable name
     def replaceProperties = [
-            "mod_version"     : version,
+            "mod_version"     : modVersion,
             "mod_desc"       : desc,
             "mod_name"        : project.name,
             "mod_id"          : id,
@@ -41,5 +75,35 @@ processResources {
     replaceProperties.put "project", project
     filesMatching(resourceTargets) {
         expand replaceProperties
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "crmReleases"
+            url = "https://maven.crmodders.dev/releases"
+            credentials{
+                username = System.getenv("CRMReleasesUsername")
+                password = System.getenv("CRMReleasesPassword")
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+    assemble.dependsOn buildSourcesJar, buildBundleJar
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = id
+
+            artifact source: buildBundleJar, classifier: '', extension: 'jar'
+            artifact source: buildSourcesJar, classifier: 'source', extension: 'jar'
+        }
     }
 }
