@@ -10,12 +10,20 @@ This Puzzle-Loader module add Kotlin Language Support
 
 ### Dependency
 
-Add it as a dependency to your Gradle project:
-
-```kotlin
-dependencies {
-    modImplementation("dev.crmodders.puzzle.loader.lang.impl")
+Step 1: Add [CRModder's Maven](https://maven.crmodders.dev/) in your build.gradle at the end of your repositories tag.\
+Here is an example `repositories` section
+```
+repositories {
+	maven { url 'https://maven.crmodders.dev/releases/' }
+	maven { url 'https://maven.crmodders.dev/snapshots/' }
+	
+	mavenCentral()
 }
+```
+
+Step 2: Add Flux to your dependencies using the text below
+```
+gameMod "dev.crmodders:puzzle-language-kotlin:1.0.0"
 ```
 
 ### Adapter
