@@ -1,14 +1,11 @@
-package dev.crmodders.puzzle.loader.lang.impl
+package io.github.puzzle.loader.lang.impl
 
 import dev.crmodders.puzzle.loader.lang.LanguageAdapter
 import dev.crmodders.puzzle.loader.lang.LanguageAdapterException
 import dev.crmodders.puzzle.loader.launch.Piece
 import dev.crmodders.puzzle.loader.mod.info.ModInfo
-import dev.crmodders.puzzle.util.ClassUtil
 import java.lang.invoke.MethodHandleProxies
 import java.lang.invoke.MethodHandles
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
 import kotlin.reflect.full.createInstance
 
 class KotlinLanguageAdapter : LanguageAdapter {
