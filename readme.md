@@ -47,8 +47,6 @@ Remember to the add a dependency entry to your `puzzle.mod.json` file:
 }
 ```
 
-For more info reference the [fabric.mod.json documentation](https://fabricmc.net/wiki/documentation:fabric_mod_json).
-
 ### Entrypoint samples
 
 <table>
