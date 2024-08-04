@@ -17,7 +17,7 @@ tasks.register("runLoader", JavaExec) {
     group = "loader"
 
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = "dev.crmodders.puzzle.loader.launch.Piece"
+    mainClass = "com.github.puzzle.loader.launch.Piece"
 }
 
 def LIBRARY_VERSIONS_FILE = "generated/library_versions.json"
