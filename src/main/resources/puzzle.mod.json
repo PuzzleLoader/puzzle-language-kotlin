@@ -8,7 +8,7 @@
   ],
   "meta": {
     "languageAdapters": {
-      "kotlin": "dev.crmodders.puzzle.loader.lang.impl.KotlinLanguageAdapter"
+      "kotlin": "com.github.puzzle.loader.lang.impl.KotlinLanguageAdapter"
     }
   },
   "dependencies": {
