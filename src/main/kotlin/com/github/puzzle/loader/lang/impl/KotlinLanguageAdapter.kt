@@ -1,4 +1,4 @@
-package io.github.puzzle.loader.lang.impl
+package com.github.puzzle.loader.lang.impl
 
 import dev.crmodders.puzzle.loader.lang.LanguageAdapter
 import dev.crmodders.puzzle.loader.lang.LanguageAdapterException

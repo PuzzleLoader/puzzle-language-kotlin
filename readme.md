@@ -14,16 +14,19 @@ Step 1: Add [CRModder's Maven](https://maven.crmodders.dev/) in your build.gradl
 Here is an example `repositories` section
 ```
 repositories {
-	maven { url 'https://maven.crmodders.dev/releases/' }
-	maven { url 'https://maven.crmodders.dev/snapshots/' }
+	maven { url 'https://jitpack.io' }
 	
 	mavenCentral()
 }
 ```
 
-Step 2: Add Flux to your dependencies using the text below
+Step 2: Add PuzzleLanguageKotlin to your dependencies using the text below
 ```
-gameMod "dev.crmodders:puzzle-language-kotlin:1.0.0"
+mod "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.0"
+```
+or
+```
+implementation "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.0"
 ```
 
 ### Adapter

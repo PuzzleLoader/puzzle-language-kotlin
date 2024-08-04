@@ -1,17 +1,12 @@
 plugins {
     id "java"
-    id "java-library"
     id "maven-publish"
-    id "cr_puzzle_gradle" version "1.1.0-dev"
-    id "com.github.johnrengelman.shadow"  version "8.1.1"
+    id "cr_puzzle_gradle"
+    id "com.github.johnrengelman.shadow"
     id 'org.jetbrains.kotlin.jvm'
 }
 
-group = "io.github"
-
-puzzle_loader {
-    accessManipulatorPath = file("src/main/resources/example_mod.manipulator")
-}
+group = "com.github"
 
 repositories {
     mavenCentral()
@@ -85,20 +80,6 @@ kotlin {
 }
 
 publishing {
-    repositories {
-        maven {
-            name = "crmReleases"
-            url = "https://maven.crmodders.dev/releases"
-            credentials{
-                username = System.getenv("CRMReleasesUsername")
-                password = System.getenv("CRMReleasesPassword")
-            }
-            authentication {
-                basic(BasicAuthentication)
-            }
-        }
-    }
-    assemble.dependsOn buildSourcesJar, buildBundleJar
     publications {
         maven(MavenPublication) {
             groupId = group
@@ -108,4 +89,9 @@ publishing {
             artifact source: buildSourcesJar, classifier: 'source', extension: 'jar'
         }
     }
+}
+
+wrapper {
+    gradleVersion = "8.5"
+    distributionType = Wrapper.DistributionType.ALL
 }
