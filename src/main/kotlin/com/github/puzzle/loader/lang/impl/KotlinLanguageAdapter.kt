@@ -1,9 +1,9 @@
 package com.github.puzzle.loader.lang.impl
 
-import dev.crmodders.puzzle.loader.lang.LanguageAdapter
-import dev.crmodders.puzzle.loader.lang.LanguageAdapterException
-import dev.crmodders.puzzle.loader.launch.Piece
-import dev.crmodders.puzzle.loader.mod.info.ModInfo
+import com.github.puzzle.loader.lang.LanguageAdapter
+import com.github.puzzle.loader.lang.LanguageAdapterException
+import com.github.puzzle.loader.launch.Piece
+import com.github.puzzle.loader.mod.info.ModInfo
 import java.lang.invoke.MethodHandleProxies
 import java.lang.invoke.MethodHandles
 import kotlin.reflect.full.createInstance
