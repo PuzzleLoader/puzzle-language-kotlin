@@ -1,7 +1,5 @@
 pluginManagement {
     repositories {
-        maven { url "https://maven.crmodders.dev/plugins" }
-        maven { url "https://maven.crmodders.dev/releases" }
         maven {
             name "JitPack"
             url "https://jitpack.io"
@@ -20,12 +18,18 @@ buildscript {
             name "JitPack"
             url "https://jitpack.io"
         }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
         mavenCentral()
         gradlePluginPortal()
+        mavenLocal()
     }
     dependencies {
         classpath "com.github.johnrengelman:shadow:8.1.1"
-        classpath "com.github.PuzzleLoader:CRPuzzleGradle:$puzzle_gradle_version"
+//        classpath "com.github.PuzzleLoader:jigsaw:$jigsaw_gradle_version"
+        classpath "net.fabricmc:jigsaw:1.8-SNAPSHOT"
     }
 }
 
@@ -33,4 +37,4 @@ plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
 }
 
-rootProject.name = 'puzzle-language-kotlin'
+rootProject.name = 'Kotlin for Puzzle'

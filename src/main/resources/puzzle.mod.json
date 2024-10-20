@@ -7,11 +7,12 @@
     "Mr_Zombii"
   ],
   "meta": {
+    "icon": "puzzle-language-kotlin:icons/icon.png",
     "languageAdapters": {
-      "kotlin": "com.github.puzzle.loader.lang.impl.KotlinLanguageAdapter"
+      "kotlin": "com.github.puzzle.core.loader.provider.lang.impl.KotlinLanguageProvider"
     }
   },
   "dependencies": {
-    "puzzle-loader": ">=1.0.0"
+    "puzzle-loader": ">=2.0.0"
   }
 }

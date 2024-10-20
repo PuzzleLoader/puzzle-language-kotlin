@@ -1,19 +1,19 @@
-package com.github.puzzle.loader.lang.impl
+package com.github.puzzle.core.loader.provider.lang.impl
 
-import com.github.puzzle.loader.lang.LanguageAdapter
-import com.github.puzzle.loader.lang.LanguageAdapterException
-import com.github.puzzle.loader.launch.Piece
-import com.github.puzzle.loader.mod.info.ModInfo
+import com.github.puzzle.core.loader.launch.Piece
+import com.github.puzzle.core.loader.meta.ModInfo
+import com.github.puzzle.core.loader.provider.ProviderException
+import com.github.puzzle.core.loader.provider.lang.ILangProvider
 import java.lang.invoke.MethodHandleProxies
 import java.lang.invoke.MethodHandles
 import kotlin.reflect.full.createInstance
 
-class KotlinLanguageAdapter : LanguageAdapter {
+class KotlinLanguageProvider : ILangProvider {
 
     override fun <T> create(info: ModInfo, value: String, type: Class<T>): T {
         val split = value.split("::");
 
-        if (split.size >= 3) throw LanguageAdapterException("Invalid format for handle: $value")
+        if (split.size >= 3) throw ProviderException("Invalid format for handle: $value")
 
         val clazz = try {
             Class.forName(split[0], false, Piece.classLoader) as Class<*>
@@ -29,12 +29,12 @@ class KotlinLanguageAdapter : LanguageAdapter {
                     ?: try {
                         kClass.createInstance() as T
                     } catch (e: Exception) {
-                        throw LanguageAdapterException(e)
+                        throw ProviderException(e)
                     }
-            } else throw LanguageAdapterException("Class " + clazz.simpleName + " is not able to be cast to ${type.name}!")
+            } else throw ProviderException("Class " + clazz.simpleName + " is not able to be cast to ${type.name}!")
         }
         val instance = kClass.objectInstance ?: run {
-            return LanguageAdapter.getDefault().create(info, value, type)
+            return ILangProvider.getDefault().create(info, value, type)
         }
 
         val name = split[1]
@@ -47,29 +47,29 @@ class KotlinLanguageAdapter : LanguageAdapter {
                 val fType = field.type
 
                 if (methodList.isNotEmpty()) {
-                    throw LanguageAdapterException("Ambiguous $value - refers to both field and method!")
+                    throw ProviderException("Ambiguous $value - refers to both field and method!")
                 }
 
                 if (!type.isAssignableFrom(fType)) {
-                    throw LanguageAdapterException("Field " + value + " cannot be cast to " + type.name + "!")
+                    throw ProviderException("Field " + value + " cannot be cast to " + type.name + "!")
                 }
 
                 return field.get(instance) as T
             } catch (e: NoSuchFieldException) {
                 // ignore
             } catch (e: IllegalAccessException) {
-                throw LanguageAdapterException("Field $value cannot be accessed!", e)
+                throw ProviderException("Field $value cannot be accessed!", e)
             }
         }
 
         if (!type.isInterface) {
-            throw LanguageAdapterException("Cannot proxy method " + value + " to non-interface type " + type.name + "!")
+            throw ProviderException("Cannot proxy method " + value + " to non-interface type " + type.name + "!")
         }
 
         if (methodList.isEmpty()) {
-            throw LanguageAdapterException("Could not find $value!")
+            throw ProviderException("Could not find $value!")
         } else if (methodList.size >= 2) {
-            throw LanguageAdapterException("Found multiple method entries of name $value!")
+            throw ProviderException("Found multiple method entries of name $value!")
         }
 
         val handle = try {
@@ -77,13 +77,13 @@ class KotlinLanguageAdapter : LanguageAdapter {
                 .unreflect(methodList[0])
                 .bindTo(instance)
         } catch (ex: Exception) {
-            throw LanguageAdapterException("Failed to create method handle for $value!", ex)
+            throw ProviderException("Failed to create method handle for $value!", ex)
         }
 
         try {
             return MethodHandleProxies.asInterfaceInstance(type, handle)
         } catch (ex: Exception) {
-            throw LanguageAdapterException(ex)
+            throw ProviderException(ex)
         }
     }
 

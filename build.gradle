@@ -1,23 +1,27 @@
 plugins {
-    id "java"
-    id "maven-publish"
-    id "cr_puzzle_gradle"
-    id "com.github.johnrengelman.shadow"
+    id 'java'
+    id 'jigsaw'
+    id 'maven-publish'
+    id 'com.github.johnrengelman.shadow'
     id 'org.jetbrains.kotlin.jvm'
 }
 
 group = "com.github"
 
-repositories {
-    mavenCentral()
+loom {
+    splitEnvironmentSourceSets()
+
+    mods {
+        "puzzle-language-kotlin" {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
 }
 
-
-tasks.register("runLoader", JavaExec) {
-    group = "loader"
-
-    classpath = sourceSets.main.runtimeClasspath
-    mainClass = "com.github.puzzle.loader.launch.Piece"
+repositories {
+    mavenCentral()
+    maven { url = "https://jitpack.io" }
 }
 
 def LIBRARY_VERSIONS_FILE = "generated/library_versions.json"
@@ -46,17 +50,19 @@ def hasMissingLibVersion = !libVersions.keySet().containsAll(libraries)
 def kotlinVersion = file(KOTLIN_VERSION_FILE).text
 
 dependencies {
-    bundle "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     libraries.forEach {
         bundle("${it}:${libVersions[it]}")
     }
+
+    bundle("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    cosmicReach("finalforeach:cosmicreach:${cosmic_reach_version}")
 }
 
 version = modVersion + "+kotlin." + kotlinVersion
 
 processResources {
     def resourceTargets = [ // Locations of where to inject the properties
-                            "puzzle.mod.json"
+        "puzzle.mod.json"
     ]
 
     // Left item is the name in the target, right is the variable name
@@ -85,8 +91,8 @@ publishing {
             groupId = group
             artifactId = id
 
-            artifact source: buildBundleJar, classifier: '', extension: 'jar'
-            artifact source: buildSourcesJar, classifier: 'source', extension: 'jar'
+            artifact source: buildMergedBundleJar, classifier: 'client', extension: 'jar'
+            artifact source: buildServerBundleJar, classifier: 'server', extension: 'jar'
         }
     }
 }
