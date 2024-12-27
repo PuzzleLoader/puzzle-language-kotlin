@@ -22,11 +22,11 @@ repositories {
 
 Step 2: Add PuzzleLanguageKotlin to your dependencies using the text below
 ```
-mod "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.0"
+mod "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.3"
 ```
 or
 ```
-implementation "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.0"
+implementation "com.github:PuzzleLoader:puzzle-language-kotlin:1.0.3"
 ```
 
 ### Adapter
@@ -45,7 +45,7 @@ Remember to the add a dependency entry to your `puzzle.mod.json` file:
         ]
     },
     "depends": {
-        "puzzle-language-kotlin": ">=1.0.0"
+        "puzzle-language-kotlin": ">=1.0.3"
     }
 }
 ```
