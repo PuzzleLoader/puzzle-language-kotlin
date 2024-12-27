@@ -45,7 +45,7 @@ Remember to the add a dependency entry to your `puzzle.mod.json` file:
         ]
     },
     "depends": {
-        "puzzle-language-kotlin": ">=1.0.3"
+        "puzzle-language-kotlin": ">=1.0.4"
     }
 }
 ```
